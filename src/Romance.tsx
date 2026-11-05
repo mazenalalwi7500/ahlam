@@ -578,7 +578,7 @@ export function KissLayer() {
         whileHover={{ scale: 1.05 }}
       >
         <span className="kiss-btn-icon">💋</span>
-        <span>أرسلي قُبلة</span>
+        <span>بوسة خاصة</span>
       </motion.button>
     </>
   )
