@@ -847,3 +847,45 @@ body {
 @media (hover: hover) and (pointer: fine) {
   .shake-hint { display: none; }
 }
+
+/* ---------- Animated latin name on the letter ---------- */
+.letter-name-latin {
+  font-family: 'Playfair Display', 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-weight: 600;
+  font-size: 40px;
+  letter-spacing: 1.5px;
+  line-height: 1.2;
+  margin: 6px 0 12px;
+  display: inline-flex;
+  justify-content: center;
+}
+.ln-char {
+  display: inline-block;
+  background: linear-gradient(100deg, #9a7418 0%, #c9a227 30%, #fff1b8 48%, #d4af37 62%, #9a7418 100%);
+  background-size: 250% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  opacity: 0;
+  transform: translateY(14px) rotate(-6deg);
+  filter: blur(4px);
+  animation:
+    lnIn 0.9s calc(0.9s + var(--i) * 0.14s) cubic-bezier(0.2, 0.9, 0.3, 1.2) forwards,
+    lnShine 4s calc(2.2s + var(--i) * 0.12s) linear infinite,
+    lnFloat 3.6s calc(2s + var(--i) * 0.18s) ease-in-out infinite;
+}
+@keyframes lnIn {
+  to { opacity: 1; transform: translateY(0) rotate(0deg); filter: blur(0); }
+}
+@keyframes lnShine {
+  from { background-position: 120% 0; }
+  to { background-position: -120% 0; }
+}
+@keyframes lnFloat {
+  0%, 100% { translate: 0 0; }
+  50% { translate: 0 -3px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ln-char { animation: none; opacity: 1; transform: none; filter: none; }
+}

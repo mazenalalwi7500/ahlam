@@ -75,7 +75,7 @@ export default function App() {
             transition={{ delay: 0.3, duration: 1.2 }}
           >
             <AhlaamSignature size="lg" delay={0.5} tagline="My Most Beautiful Dream" />
-            <div className="hint-sub">رسالة خاصة · {RECIPIENT}</div>
+            <div className="hint-sub">لك ياحــلوم</div>
           </motion.div>
         )}
       </AnimatePresence>
@@ -103,8 +103,11 @@ export default function App() {
             <span className="letter-corner br" />
             <div className="letter-inner">
               <div className="letter-greeting">جمعة مباركة</div>
-              <div className="letter-name">{RECIPIENT}</div>
-              <div className="letter-latin">Ahlaam</div>
+              <div className="letter-name letter-name-latin" dir="ltr" aria-label="Ahlaam">
+                {'Ahlaam'.split('').map((ch, i) => (
+                  <span key={i} className="ln-char" style={{ ['--i' as string]: i }}>{ch}</span>
+                ))}
+              </div>
               <div className="letter-ornament">❀ ✦ ❀</div>
             </div>
           </motion.div>
