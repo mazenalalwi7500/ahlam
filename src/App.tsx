@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { Starfield, FloatingHearts } from './Background'
 import { playOpenSting, useAmbientMusic } from './audio'
+import { AhlaamSignature, Bokeh, KissLayer, LoveHeart, LuxHeart, RainLayer, RosePetals, TapHearts, requestMotionPermission, useShakeRain } from './Romance'
 
 const HeartIcon = ({ size = 38, color = '#fffdf7' }: { size?: number; color?: string }) => (
   <svg width={size} height={size} viewBox="0 0 24 24" fill={color}>
@@ -33,10 +34,12 @@ export default function App() {
   const [sealing, setSealing] = useState(true)
   const { playing, toggle, start } = useAmbientMusic()
   const [hintGone, setHintGone] = useState(false)
+  useShakeRain(opened)
 
   const handleOpen = () => {
     if (opened) return
     start() // start music on first interaction
+    requestMotionPermission() // iOS: allow shake-to-rain
     setSealing(false)
     setHintGone(true)
     playOpenSting()
@@ -44,9 +47,13 @@ export default function App() {
   }
 
   return (
-    <div className="scene">
+    <div className={`scene ${opened ? 'is-open' : ''}`}>
+      <Bokeh />
       <Starfield />
+      <RosePetals count={opened ? 22 : 14} />
       <FloatingHearts count={opened ? 22 : 12} />
+      <RainLayer />
+      <TapHearts />
 
       <div className="glow-ring" />
 
@@ -58,19 +65,23 @@ export default function App() {
         {playing ? <MusicIcon /> : <MuteIcon />}
       </button>
 
-      {!opened && (
-        <motion.div
-          className="hint-name"
-          initial={{ opacity: 0, y: -10 }}
-          animate={{ opacity: 0.9, y: 0 }}
-          transition={{ delay: 1.4, duration: 1 }}
-        >
-          رسالة خاصة · {RECIPIENT}
-        </motion.div>
-      )}
+      <AnimatePresence>
+        {!opened && (
+          <motion.div
+            className="hint-name"
+            initial={{ opacity: 0, y: -14, filter: 'blur(8px)' }}
+            animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+            exit={{ opacity: 0, y: -20, filter: 'blur(8px)' }}
+            transition={{ delay: 0.3, duration: 1.2 }}
+          >
+            <AhlaamSignature size="lg" delay={0.5} tagline="My Most Beautiful Dream" />
+            <div className="hint-sub">رسالة خاصة · {RECIPIENT}</div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* ---------- Envelope stage ---------- */}
-      <div className="stage">
+      <div className={`stage ${opened ? '' : 'floating'}`}>
         <motion.div
           className="envelope"
           onClick={handleOpen}
@@ -93,6 +104,7 @@ export default function App() {
             <div className="letter-inner">
               <div className="letter-greeting">جمعة مباركة</div>
               <div className="letter-name">{RECIPIENT}</div>
+              <div className="letter-latin">Ahlaam</div>
               <div className="letter-ornament">❀ ✦ ❀</div>
             </div>
           </motion.div>
@@ -116,6 +128,7 @@ export default function App() {
                 animate={{ scale: 1, opacity: 1 }}
                 transition={{ delay: 0.9, type: 'spring', bounce: 0.5, duration: 0.8 }}
               >
+                <div className="wax-ring" />
                 <div className="wax-disc" />
                 <div className="wax-heart">
                   <HeartIcon size={38} color="#fffdf7" />
@@ -161,13 +174,23 @@ export default function App() {
               style={{ transformOrigin: 'center bottom' }}
             >
               <div className="msg-frame" />
+              <span className="msg-corner c-tl" />
+              <span className="msg-corner c-tr" />
+              <span className="msg-corner c-bl" />
+              <span className="msg-corner c-br" />
+              <motion.span
+                className="msg-sheen"
+                initial={{ x: '-120%' }}
+                animate={{ x: '220%' }}
+                transition={{ delay: 0.9, duration: 1.8, ease: 'easeInOut' }}
+              />
 
               <motion.div
                 className="msg-heart-pulse"
                 animate={{ scale: [1, 1.15, 1] }}
                 transition={{ duration: 1.4, repeat: Infinity, ease: 'easeInOut' }}
               >
-                <HeartIcon size={44} color="#b23a48" />
+                <LuxHeart size={44} />
               </motion.div>
 
               <motion.div
@@ -187,6 +210,8 @@ export default function App() {
               >
                 {RECIPIENT}
               </motion.div>
+
+              <AhlaamSignature size="sm" delay={1.1} />
 
               <motion.div
                 className="msg-divider"
@@ -224,6 +249,24 @@ export default function App() {
                 transition={{ delay: 1.8, duration: 0.8 }}
               >
                 مختوم بقطرات ندى لأجل ألطف أحلام 🌿🌷
+              </motion.div>
+
+              <motion.div
+                initial={{ opacity: 0, scale: 0.6 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 2.2, duration: 0.9, type: 'spring', bounce: 0.4 }}
+              >
+                <LoveHeart />
+              </motion.div>
+
+              <motion.div
+                className="msg-actions"
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 2.6, duration: 0.8 }}
+              >
+                <KissLayer />
+                <div className="shake-hint">📱 هزّي الجوال… وشوفي المطر</div>
               </motion.div>
             </motion.div>
           </motion.div>
